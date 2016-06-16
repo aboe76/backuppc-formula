@@ -23,6 +23,7 @@ backuppc_debconf:
 backuppc_htpasswd:
   webutil.user_exists:
     - name: {{ backuppc.server.webuser }} 
+    - password: {{ backuppc_password }}
     - htpasswd_file: {{ backuppc.server.configdir }}/htpasswd
     - option: d
     - force: true
@@ -31,17 +32,33 @@ backuppc_htpasswd:
 
 backuppc:
   pkg.installed:
-    - name: {{ backuppc.server.pkg }}
+    - pkgs: {{ backuppc.server.pkgs }}
     {% if os_family == 'Debian' and backuppc_password %}
     - require:
       - debconf: backuppc_debconf
     {% endif %}
+  service.running:
+    - name: {{ backuppc.server.service }}
+    - enable: True
+    - watch:
+      - pkg: backuppc
 
 backuppc_config:
   file.managed:
     - name: {{ backuppc.server.configdir }}/config.pl
     - template: jinja
-    - source: salt://backuppc/files/config.pl
+    - source: salt://backuppc/files/{{ grains.get('host', 'default') }}/config.pl
+    - source: salt://backuppc/files/default/config.pl
     - user: {{ backuppc.server.user }}
     - group: {{ backuppc.server.group }}
+    - require:
+      - pkg: backuppc
 
+backuppc_datadir:
+  file.directory:
+    - name: {{ backuppc.server.datadir }}
+    - user: {{ backuppc.server.user }}
+    - group: {{ backuppc.server.group }}
+    - mode: 750
+    - require:
+      - pkg: backuppc
