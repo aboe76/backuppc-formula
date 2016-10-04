@@ -25,7 +25,7 @@ Includes ``backuppc.server``.
 
 Installs the backuppc hosts file, from which backuppc server will backup the
 data. This file is dynamically updated from grains on the clients
-``roles:backup_client``.
+``backupserver: backup.example.com``.
 
 ``backuppc.client``
 ---------------------
