@@ -4,8 +4,8 @@ backuppc-client:
   pkg.installed:
     - pkgs: {{ backuppc.client.pkgs }}
 
-{# this will ensure that the backuppc server can pick up this machine #}
-roles:
+{# this will ensure that a backuppc server can pick up this machine #}
+backupserver:
   grains.present:
-    - value: backupclient
+    - value: {{ backuppc.client.backupserver }}
 

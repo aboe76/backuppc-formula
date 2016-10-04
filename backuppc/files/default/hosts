@@ -1,3 +1,4 @@
+{%- set backupserver = grains['fqdn'] %} 
 #============================================================= -*-perl-*-
 #
 # Host file list for BackupPC.
@@ -56,6 +57,6 @@ host        dhcp    user    moreUsers     # <--- do not edit this line
 #farside     0       craig   jill,jeff     # <--- example static IP host entry
 #larson      1       bill                  # <--- example DHCP host entry
 #localhost   0       backuppc              # <--- backuppc self
-{% for server, addrs in sal['mine.get']('roles:backupclient', 'network.ip_addrs', expr_form='pillar').items() %}
+{% for server, addrs in sal['mine.get']('backupserver:{{ backupserver }}', 'network.ip_addrs', expr_form='pillar').items() %}
 {{ server }} 0      root     
 {% endfor %}

@@ -21,5 +21,6 @@ backuppc:
     datadir:  /var/lib/backuppc
 
   client:
+    backupserver: backup.example.com
     pkgs:
       - rsync
